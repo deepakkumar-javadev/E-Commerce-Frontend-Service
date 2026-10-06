@@ -1,0 +1,1442 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Shopping Cart</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        background: #f5f5f5;
+        color: #333;
+    }
+
+    /* ================= NAVBAR ================= */
+
+    .navbar {
+        background: #111;
+        color: white;
+        padding: 18px 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .navbar h2 {
+        cursor: pointer;
+    }
+
+    .nav-buttons {
+        display: flex;
+        gap: 10px;
+    }
+
+    .nav-buttons button {
+        padding: 9px 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    .products-btn {
+        background: white;
+        color: #111;
+    }
+
+    .logout-btn {
+        background: #dc3545;
+        color: white;
+    }
+
+    /* ================= CONTAINER ================= */
+
+    .container {
+        max-width: 1200px;
+        margin: 35px auto;
+        padding: 0 20px;
+    }
+
+    .page-title {
+        margin-bottom: 25px;
+    }
+
+    /* ================= CART LAYOUT ================= */
+
+    .cart-layout {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 25px;
+    }
+
+    .cart-box,
+    .summary {
+        background: white;
+        border-radius: 10px;
+        padding: 25px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    }
+
+    /* ================= CART ITEM ================= */
+
+    .cart-item {
+        display: grid;
+        grid-template-columns: 1fr 150px 130px 100px;
+        gap: 20px;
+        align-items: center;
+        padding: 20px 0;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .cart-item:last-child {
+        border-bottom: none;
+    }
+
+    .product-name {
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .sku {
+        color: #777;
+        font-size: 13px;
+        margin-top: 5px;
+    }
+
+    .price {
+        font-weight: bold;
+    }
+
+    /* ================= QUANTITY ================= */
+
+    .quantity-box {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .quantity-box button {
+        width: 34px;
+        height: 34px;
+        border: 1px solid #ccc;
+        background: white;
+        cursor: pointer;
+        border-radius: 5px;
+        font-size: 20px;
+        font-weight: bold;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        transition: 0.2s;
+    }
+
+    .quantity-box button:hover {
+        background: #111;
+        color: white;
+    }
+
+    .quantity-box button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .quantity-box span {
+        min-width: 35px;
+        text-align: center;
+        font-size: 17px;
+        font-weight: bold;
+    }
+
+    /* ================= REMOVE ================= */
+
+    .remove-btn {
+        background: #dc3545;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .remove-btn:hover {
+        background: #bb2d3b;
+    }
+
+    /* ================= SUMMARY ================= */
+
+    .summary h2 {
+        margin-bottom: 20px;
+    }
+
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px 0;
+        border-bottom: 1px solid #eee;
+    }
+
+    .summary-row.total {
+        font-size: 20px;
+        font-weight: bold;
+        border-bottom: none;
+        padding-top: 20px;
+    }
+
+    /* ================= BUTTONS ================= */
+
+    .checkout-btn {
+        width: 100%;
+        padding: 14px;
+        background: #28a745;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 15px;
+    }
+
+    .checkout-btn:hover {
+        background: #218838;
+    }
+
+    .clear-btn {
+        width: 100%;
+        padding: 12px;
+        background: #dc3545;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 15px;
+        margin-top: 10px;
+    }
+
+    .clear-btn:hover {
+        background: #bb2d3b;
+    }
+
+    /* ================= EMPTY ================= */
+
+    .empty {
+        text-align: center;
+        padding: 60px 20px;
+    }
+
+    .empty h2 {
+        margin-bottom: 10px;
+    }
+
+    .empty p {
+        color: #777;
+        margin-bottom: 20px;
+    }
+
+    .shop-btn {
+        background: #111;
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    /* ================= ERROR ================= */
+
+    .error-box {
+        background: #ffe6e6;
+        color: #b00020;
+        padding: 15px;
+        border-radius: 6px;
+        margin-bottom: 20px;
+        display: none;
+    }
+
+    .loading {
+        text-align: center;
+        padding: 50px;
+        font-size: 18px;
+    }
+
+    /* ================= RESPONSIVE ================= */
+
+    @media (max-width: 850px) {
+
+        .cart-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .cart-item {
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .quantity-box {
+            justify-content: flex-start;
+        }
+
+        .navbar {
+            padding: 15px 20px;
+        }
+    }
+</style>
+
+
+</head>
+
+<body>
+
+
+<!-- ================= NAVBAR ================= -->
+
+<div class="navbar">
+
+    <h2 onclick="goToProducts()">
+        CartNexa's Shopping
+    </h2>
+
+    <div class="nav-buttons">
+
+        <button
+            type="button"
+            class="products-btn"
+            onclick="goToProducts()">
+            Products
+        </button>
+
+        <button
+            type="button"
+            class="logout-btn"
+            onclick="logout()">
+            Logout
+        </button>
+
+    </div>
+</div>
+
+
+<!-- ================= MAIN ================= -->
+
+<div class="container">
+
+    <h1 class="page-title">
+        Shopping Cart
+    </h1>
+
+    <div
+        id="errorBox"
+        class="error-box">
+    </div>
+
+    <div id="cartContainer">
+
+        <div class="loading">
+            Loading cart...
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    // =====================================================
+    // CONFIGURATION
+    // =====================================================
+
+    const CART_API = "http://localhost:8080";
+
+
+    // =====================================================
+    // AUTH
+    // =====================================================
+
+    function getToken() {
+        return localStorage.getItem("token");
+    }
+
+
+    function getUserId() {
+        return localStorage.getItem("userId");
+    }
+
+
+    // =====================================================
+    // AUTH HEADERS
+    // =====================================================
+
+    function getAuthHeaders() {
+
+        const token = getToken();
+
+        return {
+            "Authorization": "Bearer " + token,
+            "Content-Type": "application/json"
+        };
+    }
+
+
+    // =====================================================
+    // CHECK LOGIN
+    // =====================================================
+
+    function checkLogin() {
+
+        const token = getToken();
+        const userId = getUserId();
+
+        if (!token || !userId) {
+
+            alert("Please login first.");
+
+            window.location.href =
+                "../auth/index.html";
+
+            return false;
+        }
+
+        return true;
+    }
+
+
+    // =====================================================
+    // HANDLE SESSION EXPIRED
+    // =====================================================
+
+    function handleUnauthorized() {
+
+        localStorage.removeItem("token");
+        localStorage.removeItem("userId");
+
+        alert("Session expired. Please login again.");
+
+        window.location.href =
+            "../auth/index.html";
+    }
+
+
+    // =====================================================
+    // LOAD CART
+    // =====================================================
+
+    async function loadCart() {
+
+        const container =
+            document.getElementById("cartContainer");
+
+        try {
+
+            hideError();
+
+            if (!checkLogin()) {
+                return;
+            }
+
+            const userId = getUserId();
+
+            const response = await fetch(
+                CART_API +
+                "/cart/getcart/" +
+                encodeURIComponent(userId),
+                {
+                    method: "GET",
+                    headers: getAuthHeaders()
+                }
+            );
+
+
+            console.log(
+                "GET Cart Status:",
+                response.status
+            );
+
+
+            // SESSION EXPIRED
+
+            if (
+                response.status === 401 ||
+                response.status === 403
+            ) {
+
+                handleUnauthorized();
+                return;
+            }
+
+
+            // OTHER ERROR
+
+            if (!response.ok) {
+
+                const errorText =
+                    await response.text();
+
+                console.error(
+                    "Cart API Error:",
+                    errorText
+                );
+
+                throw new Error(
+                    "Unable to load cart. HTTP " +
+                    response.status
+                );
+            }
+
+
+            const cart =
+                await response.json();
+
+
+            console.log(
+                "Cart Response:",
+                cart
+            );
+
+
+            // EMPTY CART
+
+            if (
+                !cart ||
+                !cart.items ||
+                cart.items.length === 0
+            ) {
+
+                showEmptyCart();
+                return;
+            }
+
+
+            // DISPLAY CART
+
+            displayCart(cart);
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "Load Cart Error:",
+                error
+            );
+
+            showError(
+                error.message ||
+                "Unable to connect to Cart Service."
+            );
+
+            container.innerHTML = `
+
+                <div class="empty">
+
+                    <h2>
+                        Unable to load cart
+                    </h2>
+
+                    <p>
+                        ${escapeHtml(
+                            error.message ||
+                            "Please try again."
+                        )}
+                    </p>
+
+                    <button
+                        type="button"
+                        class="shop-btn"
+                        onclick="loadCart()">
+
+                        Retry
+
+                    </button>
+
+                </div>
+            `;
+        }
+    }
+
+
+    // =====================================================
+    // DISPLAY CART
+    // =====================================================
+
+    function displayCart(cart) {
+
+        const container =
+            document.getElementById(
+                "cartContainer"
+            );
+
+        const items =
+            cart.items || [];
+
+
+        let html = `
+
+            <div class="cart-layout">
+
+                <div class="cart-box">
+
+                    <h2>
+                        Cart Items (${items.length})
+                    </h2>
+        `;
+
+
+        items.forEach(item => {
+
+            const productId =
+                Number(item.productId);
+
+            const productName =
+                item.productName || "Product";
+
+            const skuCode =
+                item.skuCode || "";
+
+            const price =
+                Number(item.price || 0);
+
+            const quantity =
+                Number(item.quantity || 1);
+
+            const itemTotal =
+                price * quantity;
+
+
+            html += `
+
+                <div class="cart-item">
+
+                    <!-- PRODUCT -->
+
+                    <div>
+
+                        <div class="product-name">
+
+                            ${escapeHtml(
+                                productName
+                            )}
+
+                        </div>
+
+
+                        <div class="sku">
+
+                            SKU:
+                            ${escapeHtml(
+                                skuCode
+                            )}
+
+                        </div>
+
+
+                        <div class="price">
+
+                            ₹${price.toFixed(2)}
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- QUANTITY -->
+
+                    <div class="quantity-box">
+
+                        <button
+                            type="button"
+                            title="Decrease quantity"
+                            onclick="updateQuantity(
+                                ${productId},
+                                ${quantity - 1}
+                            )">
+
+                            −
+
+                        </button>
+
+
+                        <span>
+
+                            ${quantity}
+
+                        </span>
+
+
+                        <button
+                            type="button"
+                            title="Increase quantity"
+                            onclick="updateQuantity(
+                                ${productId},
+                                ${quantity + 1}
+                            )">
+
+                            +
+
+                        </button>
+
+                    </div>
+
+
+                    <!-- ITEM TOTAL -->
+
+                    <div class="price">
+
+                        ₹${itemTotal.toFixed(2)}
+
+                    </div>
+
+
+                    <!-- REMOVE -->
+
+                    <div>
+
+                        <button
+                            type="button"
+                            class="remove-btn"
+                            onclick="removeItem(
+                                ${productId}
+                            )">
+
+                            Remove
+
+                        </button>
+
+                    </div>
+
+                </div>
+            `;
+        });
+
+
+        html += `
+
+                </div>
+
+
+                <!-- SUMMARY -->
+
+                <div class="summary">
+
+                    <h2>
+                        Order Summary
+                    </h2>
+
+                    <div id="summaryContent">
+                    </div>
+
+                </div>
+
+            </div>
+        `;
+
+
+        container.innerHTML = html;
+
+
+        updateSummary(items);
+    }
+
+
+    // =====================================================
+    // UPDATE SUMMARY
+    // =====================================================
+
+    function updateSummary(items) {
+
+        let totalItems = 0;
+        let subtotal = 0;
+
+
+        items.forEach(item => {
+
+            const quantity =
+                Number(item.quantity || 0);
+
+            const price =
+                Number(item.price || 0);
+
+
+            totalItems += quantity;
+
+            subtotal +=
+                quantity * price;
+        });
+
+
+        const delivery = 0;
+
+        const total =
+            subtotal + delivery;
+
+
+        const summary =
+            document.getElementById(
+                "summaryContent"
+            );
+
+
+        summary.innerHTML = `
+
+            <div class="summary-row">
+
+                <span>
+                    Items
+                </span>
+
+                <span>
+                    ${totalItems}
+                </span>
+
+            </div>
+
+
+            <div class="summary-row">
+
+                <span>
+                    Subtotal
+                </span>
+
+                <span>
+                    ₹${subtotal.toFixed(2)}
+                </span>
+
+            </div>
+
+
+            <div class="summary-row">
+
+                <span>
+                    Delivery
+                </span>
+
+                <span>
+                    FREE
+                </span>
+
+            </div>
+
+
+            <div class="summary-row total">
+
+                <span>
+                    Total
+                </span>
+
+                <span>
+                    ₹${total.toFixed(2)}
+                </span>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="checkout-btn"
+                onclick="checkout()">
+
+                Proceed to Checkout
+
+            </button>
+
+
+            <button
+                type="button"
+                class="clear-btn"
+                onclick="clearCart()">
+
+                Clear Cart
+
+            </button>
+        `;
+    }
+
+
+    // =====================================================
+    // UPDATE QUANTITY
+    // =====================================================
+
+    async function updateQuantity(
+        productId,
+        quantity
+    ) {
+
+        console.log(
+            "updateQuantity() called:",
+            productId,
+            quantity
+        );
+
+
+        if (!checkLogin()) {
+            return;
+        }
+
+
+        // =================================================
+        // QUANTITY 0
+        // REMOVE ITEM
+        // =================================================
+
+        if (quantity <= 0) {
+
+            await removeItem(productId);
+
+            return;
+        }
+
+
+        const userId =
+            getUserId();
+
+
+        try {
+
+            console.log(
+                "Sending PATCH request:",
+                {
+                    userId: userId,
+                    productId: productId,
+                    quantity: quantity
+                }
+            );
+
+
+            // =================================================
+            // PATCH UPDATE QUANTITY
+            // =================================================
+
+            const response =
+                await fetch(
+
+                    CART_API +
+                    "/cart/updatefield/" +
+                    encodeURIComponent(userId) +
+                    "/items/" +
+                    encodeURIComponent(productId),
+
+                    {
+                        method: "PATCH",
+
+                        headers:
+                            getAuthHeaders(),
+
+                        body:
+                            JSON.stringify({
+                                quantity: quantity
+                            })
+                    }
+                );
+
+
+            console.log(
+                "PATCH Status:",
+                response.status
+            );
+
+
+            // =================================================
+            // SESSION EXPIRED
+            // =================================================
+
+            if (
+                response.status === 401 ||
+                response.status === 403
+            ) {
+
+                handleUnauthorized();
+
+                return;
+            }
+
+
+            // =================================================
+            // ERROR
+            // =================================================
+
+            if (!response.ok) {
+
+                const errorText =
+                    await response.text();
+
+                console.error(
+                    "Update quantity failed:",
+                    errorText
+                );
+
+                throw new Error(
+                    "Unable to update quantity. HTTP " +
+                    response.status
+                );
+            }
+
+
+            // =================================================
+            // SUCCESS
+            // =================================================
+
+            const updatedCart =
+                await response.json();
+
+            console.log(
+                "Quantity updated:",
+                updatedCart
+            );
+
+
+            // Reload cart from backend
+
+            await loadCart();
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "Update Quantity Error:",
+                error
+            );
+
+            alert(
+                error.message ||
+                "Unable to update quantity."
+            );
+        }
+    }
+
+
+    // =====================================================
+    // REMOVE SINGLE ITEM
+    // =====================================================
+
+    async function removeItem(productId) {
+
+        if (!checkLogin()) {
+            return;
+        }
+
+
+        const confirmRemove =
+            confirm(
+                "Remove this product from cart?"
+            );
+
+
+        if (!confirmRemove) {
+            return;
+        }
+
+
+        const userId =
+            getUserId();
+
+
+        try {
+
+            const response =
+                await fetch(
+
+                    CART_API +
+                    "/cart/removecart/cart/" +
+                    encodeURIComponent(userId) +
+                    "/items/" +
+                    encodeURIComponent(productId),
+
+                    {
+                        method: "DELETE",
+
+                        headers:
+                            getAuthHeaders()
+                    }
+                );
+
+
+            console.log(
+                "Remove Status:",
+                response.status
+            );
+
+
+            // SESSION EXPIRED
+
+            if (
+                response.status === 401 ||
+                response.status === 403
+            ) {
+
+                handleUnauthorized();
+
+                return;
+            }
+
+
+            // ERROR
+
+            if (!response.ok) {
+
+                const errorText =
+                    await response.text();
+
+                console.error(
+                    "Remove error:",
+                    errorText
+                );
+
+                throw new Error(
+                    "Unable to remove item. HTTP " +
+                    response.status
+                );
+            }
+
+
+            // Reload cart
+
+            await loadCart();
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "Remove Item Error:",
+                error
+            );
+
+            alert(
+                error.message ||
+                "Unable to remove item."
+            );
+        }
+    }
+
+
+    // =====================================================
+    // CLEAR CART
+    // =====================================================
+
+    async function clearCart() {
+
+        if (!checkLogin()) {
+            return;
+        }
+
+
+        const confirmClear =
+            confirm(
+                "Are you sure you want to clear the cart?"
+            );
+
+
+        if (!confirmClear) {
+            return;
+        }
+
+
+        const userId =
+            getUserId();
+
+
+        try {
+
+            const response =
+                await fetch(
+
+                    CART_API +
+                    "/cart/clear/" +
+                    encodeURIComponent(userId),
+
+                    {
+                        method: "DELETE",
+
+                        headers:
+                            getAuthHeaders()
+                    }
+                );
+
+
+            console.log(
+                "Clear Cart Status:",
+                response.status
+            );
+
+
+            // SESSION EXPIRED
+
+            if (
+                response.status === 401 ||
+                response.status === 403
+            ) {
+
+                handleUnauthorized();
+
+                return;
+            }
+
+
+            // ERROR
+
+            if (!response.ok) {
+
+                const errorText =
+                    await response.text();
+
+                console.error(
+                    "Clear cart error:",
+                    errorText
+                );
+
+                throw new Error(
+                    "Unable to clear cart. HTTP " +
+                    response.status
+                );
+            }
+
+
+            // Reload cart
+
+            await loadCart();
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "Clear Cart Error:",
+                error
+            );
+
+            alert(
+                error.message ||
+                "Unable to clear cart."
+            );
+        }
+    }
+
+
+    // =====================================================
+    // EMPTY CART
+    // =====================================================
+
+    function showEmptyCart() {
+
+        const container =
+            document.getElementById(
+                "cartContainer"
+            );
+
+
+        container.innerHTML = `
+
+            <div class="cart-box empty">
+
+                <h2>
+                    Your cart is empty
+                </h2>
+
+                <p>
+                    You haven't added any products yet.
+                </p>
+
+                <button
+                    type="button"
+                    class="shop-btn"
+                    onclick="goToProducts()">
+
+                    Continue Shopping
+
+                </button>
+
+            </div>
+        `;
+    }
+
+
+    // =====================================================
+    // CHECKOUT
+    // =====================================================
+
+    function checkout() {
+
+        const userId =
+            getUserId();
+
+        const token =
+            getToken();
+
+
+        if (!userId || !token) {
+
+            alert(
+                "Please login first."
+            );
+
+            window.location.href =
+                "../auth/index.html";
+
+            return;
+        }
+
+
+        /*
+            cart.html location:
+            static/product/cart.html
+
+            place-order.html location:
+            static/order/place-order.html
+        */
+
+        window.location.href =
+            "../order/place-order.html";
+    }
+
+
+    // =====================================================
+    // GO TO PRODUCTS
+    // =====================================================
+
+    function goToProducts() {
+
+        /*
+            products.html is in same folder
+            static/product/products.html
+        */
+
+        window.location.href =
+            "products.html";
+    }
+
+
+    // =====================================================
+    // LOGOUT
+    // =====================================================
+
+    function logout() {
+
+        localStorage.removeItem("token");
+        localStorage.removeItem("userId");
+        localStorage.removeItem("cart");
+
+
+        window.location.href =
+            "../auth/index.html";
+    }
+
+
+    // =====================================================
+    // ERROR HANDLING
+    // =====================================================
+
+    function showError(message) {
+
+        const errorBox =
+            document.getElementById(
+                "errorBox"
+            );
+
+
+        errorBox.style.display =
+            "block";
+
+
+        errorBox.innerText =
+            message ||
+            "Something went wrong.";
+    }
+
+
+    function hideError() {
+
+        const errorBox =
+            document.getElementById(
+                "errorBox"
+            );
+
+
+        errorBox.style.display =
+            "none";
+
+
+        errorBox.innerText =
+            "";
+    }
+
+
+    // =====================================================
+    // HTML ESCAPE
+    // =====================================================
+
+    function escapeHtml(value) {
+
+        return String(value)
+
+            .replace(
+                /&/g,
+                "&amp;"
+            )
+
+            .replace(
+                /</g,
+                "&lt;"
+            )
+
+            .replace(
+                />/g,
+                "&gt;"
+            )
+
+            .replace(
+                /"/g,
+                "&quot;"
+            )
+
+            .replace(
+                /'/g,
+                "&#039;"
+            );
+    }
+
+
+    // =====================================================
+    // PAGE LOAD
+    // =====================================================
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        function () {
+
+            console.log(
+                "Cart page loaded"
+            );
+
+            console.log(
+                "Token exists:",
+                !!getToken()
+            );
+
+            console.log(
+                "User ID:",
+                getUserId()
+            );
+
+
+            loadCart();
+        }
+    );
+
+</script>
+
+</body>
+
+</html>

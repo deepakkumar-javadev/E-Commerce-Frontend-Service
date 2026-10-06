@@ -1,0 +1,1566 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<title>Place Your Order - CartNexa</title>
+
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			margin: 0;
+			font-family: Arial, sans-serif;
+			background: #f5f5f5;
+			color: #222;
+		}
+
+		/* ================= HEADER ================= */
+
+		.header {
+			height: 65px;
+			background: #ffffff;
+			border-bottom: 1px solid #ddd;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 0 7%;
+		}
+
+		.logo {
+			text-decoration: none;
+			font-size: 25px;
+			font-weight: bold;
+			color: #2874f0;
+		}
+
+		.logout-btn {
+			background: #2874f0;
+			border: none;
+			color: white;
+			padding: 10px 20px;
+			border-radius: 4px;
+			cursor: pointer;
+			font-size: 14px;
+		}
+
+		.logout-btn:hover {
+			background: #1259c7;
+		}
+
+		/* ================= CONTAINER ================= */
+
+		.container {
+			width: 90%;
+			max-width: 1100px;
+			margin: 30px auto;
+		}
+
+		.page-title {
+			text-align: center;
+			margin-bottom: 25px;
+			font-size: 28px;
+		}
+
+		/* ================= SECTION ================= */
+
+		.section {
+			background: white;
+			margin-bottom: 18px;
+			border-radius: 4px;
+			border: 1px solid #ddd;
+			overflow: hidden;
+		}
+
+		.section-title {
+			background: #fafafa;
+			border-bottom: 1px solid #ddd;
+			padding: 15px 20px;
+			font-size: 18px;
+			font-weight: bold;
+		}
+
+		.section-body {
+			padding: 20px;
+		}
+
+		/* ================= ADDRESS ================= */
+
+		.address-box {
+			position: relative;
+			line-height: 1.7;
+		}
+
+		.address-name {
+			font-size: 17px;
+			font-weight: bold;
+			margin-bottom: 4px;
+		}
+
+		.change-btn {
+			position: absolute;
+			right: 0;
+			top: 0;
+			background: white;
+			color: #2874f0;
+			border: 1px solid #2874f0;
+			padding: 8px 18px;
+			border-radius: 3px;
+			cursor: pointer;
+		}
+
+		.change-btn:hover {
+			background: #2874f0;
+			color: white;
+		}
+
+		/* ================= ORDER ITEMS ================= */
+
+		.item {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: 18px 0;
+			border-bottom: 1px solid #eee;
+			gap: 20px;
+		}
+
+		.item:last-child {
+			border-bottom: none;
+		}
+
+		.item-name {
+			font-size: 16px;
+			font-weight: 600;
+			margin-bottom: 8px;
+		}
+
+		.item-qty {
+			color: #666;
+			font-size: 14px;
+		}
+
+		.item-price {
+			text-align: right;
+			white-space: nowrap;
+			font-size: 15px;
+		}
+
+		.item-subtotal {
+			font-weight: bold;
+			margin-top: 5px;
+		}
+
+		/* ================= PRICE DETAILS ================= */
+
+		.price-row {
+			display: flex;
+			justify-content: space-between;
+			padding: 10px 0;
+			font-size: 15px;
+		}
+
+		.price-row.discount {
+			color: #008000;
+		}
+
+		.price-row.delivery {
+			color: #008000;
+		}
+
+		.price-total {
+			display: flex;
+			justify-content: space-between;
+			border-top: 1px solid #ddd;
+			margin-top: 10px;
+			padding-top: 15px;
+			font-size: 19px;
+			font-weight: bold;
+		}
+
+		/* ================= PAYMENT ================= */
+
+		.payment-option {
+			border: 1px solid #ddd;
+			padding: 16px;
+			margin-bottom: 12px;
+			border-radius: 4px;
+			cursor: pointer;
+			display: block;
+		}
+
+		.payment-option:hover {
+			border-color: #2874f0;
+			background: #fafafa;
+		}
+
+		.payment-option input {
+			margin-right: 10px;
+		}
+
+		.payment-title {
+			font-weight: bold;
+			font-size: 16px;
+		}
+
+		.payment-description {
+			margin-left: 25px;
+			margin-top: 6px;
+			color: #666;
+			font-size: 14px;
+		}
+
+		/* ================= CONFIRMATION ================= */
+
+		.confirmation {
+			padding: 20px;
+			background: white;
+			border: 1px solid #ddd;
+			margin-bottom: 18px;
+			border-radius: 4px;
+		}
+
+		.confirmation label {
+			display: flex;
+			gap: 10px;
+			align-items: flex-start;
+			cursor: pointer;
+			line-height: 1.5;
+		}
+
+		.confirmation input {
+			margin-top: 4px;
+			width: 17px;
+			height: 17px;
+		}
+
+		/* ================= BOTTOM ================= */
+
+		.bottom-bar {
+			background: white;
+			border: 1px solid #ddd;
+			padding: 20px;
+			display: flex;
+			justify-content: flex-end;
+			align-items: center;
+			gap: 30px;
+			border-radius: 4px;
+		}
+
+		.grand-total {
+			font-size: 20px;
+			font-weight: bold;
+		}
+
+		.place-order-btn {
+			background: #fb641b;
+			border: none;
+			color: white;
+			font-weight: bold;
+			padding: 15px 35px;
+			border-radius: 3px;
+			cursor: pointer;
+			font-size: 15px;
+		}
+
+		.place-order-btn:hover {
+			background: #e8540d;
+		}
+
+		.place-order-btn:disabled {
+			background: #aaa;
+			cursor: not-allowed;
+		}
+
+		/* ================= ERROR ================= */
+
+		.error-message {
+			display: none;
+			background: #ffe6e6;
+			color: #c62828;
+			border: 1px solid #ef9a9a;
+			padding: 12px 15px;
+			margin-bottom: 18px;
+			border-radius: 4px;
+			font-size: 14px;
+		}
+
+		/* ================= LOADING ================= */
+
+		.loading {
+			text-align: center;
+			padding: 30px;
+			color: #666;
+		}
+
+		/* ================= RESPONSIVE ================= */
+
+		@media (max-width: 700px) {
+
+			.header {
+				padding: 0 4%;
+			}
+
+			.container {
+				width: 94%;
+			}
+
+			.page-title {
+				font-size: 23px;
+			}
+
+			.change-btn {
+				position: static;
+				margin-top: 12px;
+			}
+
+			.item {
+				flex-direction: column;
+				align-items: flex-start;
+			}
+
+			.item-price {
+				text-align: left;
+			}
+
+			.bottom-bar {
+				flex-direction: column;
+				gap: 15px;
+			}
+
+			.place-order-btn {
+				width: 100%;
+			}
+		}
+	</style>
+</head>
+
+<body>
+
+	<!-- ================= HEADER ================= -->
+
+	<header class="header">
+
+		<a href="../product/products.html" class="logo">
+			CartNexa
+		</a>
+
+		<button class="logout-btn" onclick="logout()">
+			Logout
+		</button>
+
+	</header>
+
+
+	<!-- ================= MAIN ================= -->
+
+	<main class="container">
+
+		<h1 class="page-title">
+			Place Your Order
+		</h1>
+
+
+		<!-- ERROR -->
+
+		<div id="errorMessage" class="error-message"></div>
+
+
+		<!-- ================= DELIVERY ADDRESS ================= -->
+
+		<div class="section">
+
+			<div class="section-title">
+				1. DELIVERY ADDRESS
+			</div>
+
+			<div class="section-body">
+
+				<div class="address-box">
+
+					<div class="address-name">
+						Sir
+					</div>
+
+					<div>
+						House No. XX, Model Town
+					</div>
+
+					<div>
+						Rohtak, Haryana - 124001
+					</div>
+
+					<div>
+						Mobile: 98XXXXXX12
+					</div>
+
+					<button type="button" class="change-btn" onclick="changeAddress()">
+						Change
+					</button>
+
+				</div>
+
+			</div>
+
+		</div>
+
+
+		<!-- ================= ORDER ITEMS ================= -->
+
+		<div class="section">
+
+			<div class="section-title">
+				2. ORDER ITEMS
+			</div>
+
+			<div class="section-body" id="orderItems">
+
+				<div class="loading">
+					Loading cart items...
+				</div>
+
+			</div>
+
+		</div>
+
+
+		<!-- ================= PRICE DETAILS ================= -->
+
+		<div class="section">
+
+			<div class="section-title">
+				3. PRICE DETAILS
+			</div>
+
+			<div class="section-body">
+
+				<div class="price-row">
+
+					<span>
+						Item Total
+					</span>
+
+					<span id="itemTotal">
+						₹0.00
+					</span>
+
+				</div>
+
+
+				<div class="price-row discount">
+
+					<span>
+						Discount
+					</span>
+
+					<span>
+						-₹0.00
+					</span>
+
+				</div>
+
+
+				<div class="price-row delivery">
+
+					<span>
+						Delivery
+					</span>
+
+					<span>
+						FREE
+					</span>
+
+				</div>
+
+
+				<div class="price-total">
+
+					<span>
+						Total Amount
+					</span>
+
+					<span id="totalAmount">
+						₹0.00
+					</span>
+
+				</div>
+
+			</div>
+
+		</div>
+
+
+		<!-- ================= PAYMENT METHOD ================= -->
+
+		<div class="section">
+
+			<div class="section-title">
+				4. PAYMENT METHOD
+			</div>
+
+			<div class="section-body">
+
+
+				<!-- ONLINE -->
+
+				<label class="payment-option">
+
+					<input type="radio" name="paymentMethod" value="ONLINE" onchange="selectPaymentMethod(this.value)">
+
+					<span class="payment-title">
+						Online Payment
+					</span>
+
+					<div class="payment-description">
+						Pay securely using Razorpay
+					</div>
+
+				</label>
+
+
+				<!-- COD -->
+
+				<label class="payment-option">
+
+					<input type="radio" name="paymentMethod" value="COD" onchange="selectPaymentMethod(this.value)">
+
+					<span class="payment-title">
+						Cash on Delivery
+					</span>
+
+					<div class="payment-description">
+						Pay when your order is delivered
+					</div>
+
+				</label>
+
+			</div>
+
+		</div>
+
+
+		<!-- ================= CONFIRMATION ================= -->
+
+		<div class="confirmation">
+
+			<label>
+
+				<input type="checkbox" id="confirmDetails">
+
+				<span>
+					I confirm that my delivery address and
+					order details are correct.
+				</span>
+
+			</label>
+
+		</div>
+
+
+		<!-- ================= BOTTOM ================= -->
+
+		<div class="bottom-bar">
+
+			<div class="grand-total">
+
+				Total:
+				<span id="bottomTotal">
+					₹0.00
+				</span>
+
+			</div>
+
+			<button type="button" id="placeOrderBtn" class="place-order-btn" onclick="placeOrder()">
+
+				PLACE ORDER
+
+			</button>
+
+		</div>
+
+	</main>
+
+
+	<script>
+
+		/* =====================================================
+		   API CONFIG
+		===================================================== */
+
+		const CART_API =
+			"http://localhost:8080";
+
+		const ORDER_API =
+			"http://localhost:8080";
+
+
+		/* =====================================================
+		   AUTH
+		===================================================== */
+
+		const token =
+			localStorage.getItem("token");
+
+		const userId =
+			localStorage.getItem("userId");
+
+
+		if (!token || !userId) {
+
+			alert("Please login first.");
+
+			window.location.href =
+				"../auth/index.html";
+		}
+
+
+		/* =====================================================
+		   GLOBAL VARIABLES
+		===================================================== */
+
+		let cartItems = [];
+
+		let selectedPaymentMethod = null;
+
+		let cartTotal = 0;
+
+
+		/* =====================================================
+		   SELECT PAYMENT METHOD
+		===================================================== */
+
+		function selectPaymentMethod(method) {
+
+			selectedPaymentMethod = method;
+
+			console.log(
+				"Selected Payment Method:",
+				selectedPaymentMethod
+			);
+		}
+
+
+		/* =====================================================
+		   LOAD CART
+		   IMPORTANT:
+		   Correct backend endpoint is /cart/getcart/{userId}
+		===================================================== */
+
+		async function loadCart() {
+
+			try {
+
+				clearError();
+
+
+				console.log(
+					"Loading cart for user:",
+					userId
+				);
+
+
+				const response =
+					await fetch(
+						`${CART_API}/cart/getcart/${encodeURIComponent(userId)}`,
+						{
+							method: "GET",
+
+							headers: {
+								"Authorization":
+									`Bearer ${token}`,
+
+								"Content-Type":
+									"application/json"
+							}
+						}
+					);
+
+
+				console.log(
+					"Cart HTTP Status:",
+					response.status
+				);
+
+
+				/* =========================
+				   SESSION EXPIRED
+				========================= */
+
+				if (
+					response.status === 401
+				) {
+
+					alert(
+						"Your session has expired. Please login again."
+					);
+
+					logout();
+
+					return;
+				}
+
+
+				/* =========================
+				   FORBIDDEN
+				========================= */
+
+				if (
+					response.status === 403
+				) {
+
+					let errorMessage =
+						"You are not authorized to access your cart.";
+
+
+					try {
+
+						const errorText =
+							await response.text();
+
+						console.error(
+							"Cart 403 Backend Response:",
+							errorText
+						);
+
+						if (errorText) {
+
+							try {
+
+								const errorData =
+									JSON.parse(
+										errorText
+									);
+
+								errorMessage =
+									errorData.message ||
+									errorData.error ||
+									errorMessage;
+
+							} catch (e) {
+
+								console.error(
+									"Cart error is not JSON:",
+									errorText
+								);
+
+							}
+
+						}
+
+					} catch (e) {
+
+						console.error(
+							"403 response reading failed:",
+							e
+						);
+
+					}
+
+
+					showError(
+						errorMessage
+					);
+
+					return;
+				}
+
+
+				/* =========================
+				   OTHER ERROR
+				========================= */
+
+				if (!response.ok) {
+
+					const errorText =
+						await response.text();
+
+					console.error(
+						"Cart API Error:",
+						errorText
+					);
+
+					throw new Error(
+						"Unable to load cart."
+					);
+				}
+
+
+				/* =========================
+				   SUCCESS
+				========================= */
+
+				const data =
+					await response.json();
+
+
+				console.log(
+					"Cart Response:",
+					data
+				);
+
+
+				/*
+				 * Backend response:
+				 *
+				 * {
+				 *     items: [...]
+				 * }
+				 */
+
+				if (
+					data &&
+					Array.isArray(data.items)
+				) {
+
+					cartItems =
+						data.items;
+
+				} else {
+
+					cartItems = [];
+
+				}
+
+
+				if (
+					cartItems.length === 0
+				) {
+
+					showError(
+						"Your cart is empty."
+					);
+
+					renderCart();
+
+					return;
+				}
+
+
+				renderCart();
+
+			} catch (error) {
+
+				console.error(
+					"Load Cart Error:",
+					error
+				);
+
+				showError(
+					error.message ||
+					"Unable to load cart."
+				);
+			}
+		}
+
+
+		/* =====================================================
+		   RENDER CART
+		===================================================== */
+
+		function renderCart() {
+
+			const container =
+				document.getElementById(
+					"orderItems"
+				);
+
+
+			if (
+				!cartItems ||
+				cartItems.length === 0
+			) {
+
+				container.innerHTML = `
+                    <div class="loading">
+                        Your cart is empty.
+                    </div>
+                `;
+
+				updateTotals(0);
+
+				return;
+			}
+
+
+			let html = "";
+
+			cartTotal = 0;
+
+
+			cartItems.forEach(item => {
+
+				const productName =
+					item.productName ||
+					item.name ||
+					"Product";
+
+
+				const quantity =
+					Number(
+						item.quantity ||
+						item.qty ||
+						0
+					);
+
+
+				const price =
+					Number(
+						item.price ||
+						item.unitPrice ||
+						0
+					);
+
+
+				const subtotal =
+					quantity * price;
+
+
+				cartTotal += subtotal;
+
+
+				html += `
+
+                    <div class="item">
+
+                        <div>
+
+                            <div class="item-name">
+                                ${escapeHtml(productName)}
+                            </div>
+
+                            <div class="item-qty">
+                                Qty: ${quantity}
+                            </div>
+
+                        </div>
+
+
+                        <div class="item-price">
+
+                            ₹${price.toFixed(2)}
+                            × ${quantity}
+
+                            <div class="item-subtotal">
+                                ₹${subtotal.toFixed(2)}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                `;
+
+			});
+
+
+			container.innerHTML =
+				html;
+
+
+			updateTotals(cartTotal);
+		}
+
+
+		/* =====================================================
+		   UPDATE TOTALS
+		===================================================== */
+
+		function updateTotals(total) {
+
+			const formatted =
+				`₹${Number(total).toFixed(2)}`;
+
+
+			document.getElementById(
+				"itemTotal"
+			).textContent =
+				formatted;
+
+
+			document.getElementById(
+				"totalAmount"
+			).textContent =
+				formatted;
+
+
+			document.getElementById(
+				"bottomTotal"
+			).textContent =
+				formatted;
+		}
+
+
+		/* =====================================================
+		   PLACE ORDER
+		===================================================== */
+
+		async function placeOrder() {
+
+			clearError();
+
+
+			if (
+				!cartItems ||
+				cartItems.length === 0
+			) {
+
+				showError(
+					"Your cart is empty."
+				);
+
+				return;
+			}
+
+
+			const confirmed =
+				document.getElementById(
+					"confirmDetails"
+				).checked;
+
+
+			if (!confirmed) {
+
+				showError(
+					"Please confirm that your delivery address and order details are correct."
+				);
+
+				return;
+			}
+
+
+			if (!selectedPaymentMethod) {
+
+				showError(
+					"Please select a payment method."
+				);
+
+				return;
+			}
+
+
+			const placeOrderBtn =
+				document.getElementById(
+					"placeOrderBtn"
+				);
+
+
+			placeOrderBtn.disabled =
+				true;
+
+			placeOrderBtn.textContent =
+				"PLACING ORDER...";
+
+
+			try {
+
+				/* =========================
+				   REQUEST BODY
+				========================= */
+
+				const requestBody = {
+
+					userId:
+						Number(userId),
+
+					paymentMethod:
+						selectedPaymentMethod
+
+				};
+
+
+				console.log(
+					"Place Order Request:",
+					requestBody
+				);
+
+
+				/* =========================
+				   CREATE ORDER
+				========================= */
+
+				const response =
+					await fetch(
+						`${ORDER_API}/orders/placeOrder`,
+						{
+
+							method: "POST",
+
+							headers: {
+
+								"Content-Type":
+									"application/json",
+
+								"Authorization":
+									`Bearer ${token}`
+
+							},
+
+							body:
+								JSON.stringify(
+									requestBody
+								)
+						}
+					);
+
+
+				console.log(
+					"Place Order HTTP Status:",
+					response.status
+				);
+
+
+				/* =========================
+				   SESSION EXPIRED
+				========================= */
+
+				if (
+					response.status === 401
+				) {
+
+					alert(
+						"Your session has expired. Please login again."
+					);
+
+					logout();
+
+					return;
+				}
+
+
+				/* =========================
+				   FORBIDDEN
+				========================= */
+
+				if (
+					response.status === 403
+				) {
+
+					let errorMessage =
+						"You are not authorized to place this order.";
+
+
+					try {
+
+						const errorText =
+							await response.text();
+
+
+						console.error(
+							"403 Backend Response:",
+							errorText
+						);
+
+
+						if (errorText) {
+
+							try {
+
+								const errorData =
+									JSON.parse(
+										errorText
+									);
+
+
+								errorMessage =
+									errorData.message ||
+									errorData.error ||
+									errorMessage;
+
+							} catch (e) {
+
+								console.error(
+									"403 response is not JSON:",
+									errorText
+								);
+
+							}
+
+						}
+
+					} catch (e) {
+
+						console.error(
+							"403 response reading failed:",
+							e
+						);
+
+					}
+
+
+					throw new Error(
+						errorMessage
+					);
+				}
+
+
+				/* =========================
+				   OTHER ERROR
+				========================= */
+
+				if (!response.ok) {
+
+					let errorMessage =
+						"Unable to place order.";
+
+
+					try {
+
+						const errorText =
+							await response.text();
+
+
+						console.error(
+							"Place Order Backend Error:",
+							errorText
+						);
+
+
+						if (errorText) {
+
+							try {
+
+								const errorData =
+									JSON.parse(
+										errorText
+									);
+
+
+								errorMessage =
+									errorData.message ||
+									errorData.error ||
+									errorMessage;
+
+							} catch (e) {
+
+								console.error(
+									"Error response is not JSON:",
+									errorText
+								);
+
+							}
+
+						}
+
+					} catch (e) {
+
+						console.error(
+							"Error response reading failed:",
+							e
+						);
+
+					}
+
+
+					throw new Error(
+						errorMessage
+					);
+				}
+
+
+				/* =========================
+				   SUCCESS RESPONSE
+				========================= */
+
+				const orderData =
+					await response.json();
+
+
+				console.log(
+					"Order Response:",
+					orderData
+				);
+
+
+				/* =========================
+				   COD FLOW
+				========================= */
+
+				if (
+					selectedPaymentMethod ===
+					"COD"
+				) {
+
+					const orderId =
+						orderData.orderId;
+
+
+					if (!orderId) {
+
+						throw new Error(
+							"Order ID not received."
+						);
+
+					}
+
+
+					localStorage.setItem(
+						"lastOrderId",
+						orderId
+					);
+
+
+					window.location.href =
+						"order-COD-confirmation.html?orderId=" +
+						encodeURIComponent(
+							orderId
+						);
+
+
+					return;
+				}
+
+
+				/* =========================
+				   ONLINE FLOW
+				========================= */
+
+				if (
+					selectedPaymentMethod ===
+					"ONLINE"
+				) {
+
+					const orderId =
+						orderData.orderId;
+
+
+					const razorpayOrderId =
+						orderData.razorpayOrderId;
+
+
+					const key =
+						orderData.key;
+
+
+					const currency =
+						orderData.currency ||
+						"INR";
+
+
+					const amount =
+						Number(
+							orderData.totalAmount ||
+							0
+						);
+
+
+					if (!orderId) {
+
+						throw new Error(
+							"Order ID not received."
+						);
+
+					}
+
+
+					if (!razorpayOrderId) {
+
+						throw new Error(
+							"Razorpay Order ID not received."
+						);
+
+					}
+
+
+					if (!key) {
+
+						throw new Error(
+							"Razorpay Key not received."
+						);
+
+					}
+
+
+					localStorage.setItem(
+						"lastOrderId",
+						orderId
+					);
+
+
+					const paymentUrl =
+						"../payment/payment.html" +
+						"?orderId=" +
+						encodeURIComponent(
+							orderId
+						) +
+						"&razorpayOrderId=" +
+						encodeURIComponent(
+							razorpayOrderId
+						) +
+						"&amount=" +
+						encodeURIComponent(
+							amount
+						) +
+						"&currency=" +
+						encodeURIComponent(
+							currency
+						) +
+						"&key=" +
+						encodeURIComponent(
+							key
+						);
+
+
+					console.log(
+						"Redirecting to:",
+						paymentUrl
+					);
+
+
+					window.location.href =
+						paymentUrl;
+
+
+					return;
+				}
+
+
+				throw new Error(
+					"Invalid payment method."
+				);
+
+
+			} catch (error) {
+
+				console.error(
+					"Place Order Error:",
+					error
+				);
+
+
+				showError(
+					error.message ||
+					"Unable to place order. Please try again."
+				);
+
+
+				placeOrderBtn.disabled =
+					false;
+
+
+				placeOrderBtn.textContent =
+					"PLACE ORDER";
+
+			}
+
+		}
+
+
+		/* =====================================================
+		   CHANGE ADDRESS
+		===================================================== */
+
+		function changeAddress() {
+
+			alert(
+				"Address change option can be connected here."
+			);
+		}
+
+
+		/* =====================================================
+		   LOGOUT
+		===================================================== */
+
+		function logout() {
+
+			localStorage.removeItem(
+				"token"
+			);
+
+			localStorage.removeItem(
+				"userId"
+			);
+
+			localStorage.removeItem(
+				"lastOrderId"
+			);
+
+
+			window.location.href =
+				"../auth/index.html";
+		}
+
+
+		/* =====================================================
+		   SHOW ERROR
+		===================================================== */
+
+		function showError(message) {
+
+			const errorElement =
+				document.getElementById(
+					"errorMessage"
+				);
+
+
+			errorElement.textContent =
+				message;
+
+
+			errorElement.style.display =
+				"block";
+
+
+			window.scrollTo({
+				top: 0,
+				behavior: "smooth"
+			});
+		}
+
+
+		/* =====================================================
+		   CLEAR ERROR
+		===================================================== */
+
+		function clearError() {
+
+			const errorElement =
+				document.getElementById(
+					"errorMessage"
+				);
+
+
+			errorElement.textContent =
+				"";
+
+
+			errorElement.style.display =
+				"none";
+		}
+
+
+		/* =====================================================
+		   ESCAPE HTML
+		===================================================== */
+
+		function escapeHtml(value) {
+
+			const div =
+				document.createElement(
+					"div"
+				);
+
+
+			div.textContent =
+				value;
+
+
+			return div.innerHTML;
+		}
+
+
+		/* =====================================================
+		   PAGE LOAD
+		===================================================== */
+
+		loadCart();
+
+	</script>
+
+</body>
+
+</html>

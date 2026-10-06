@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+	<meta charset="UTF-8">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<title>CartNexa - Payment</title>
+
+	<!-- Razorpay Checkout SDK -->
+	<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+	<style>
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+			font-family: Arial, sans-serif;
+		}
+
+		body {
+			background: #f6f6f6;
+			color: #222;
+			min-height: 100vh;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.payment-container {
+			width: 90%;
+			max-width: 450px;
+			background: white;
+			padding: 30px;
+			border-radius: 10px;
+			box-shadow:
+				0 4px 18px rgba(0, 0, 0, 0.10);
+			text-align: center;
+		}
+
+		.logo {
+			color: #d50000;
+			font-size: 28px;
+			font-weight: bold;
+			margin-bottom: 20px;
+		}
+
+		h2 {
+			margin-bottom: 25px;
+		}
+
+		.payment-info {
+			background: #f7f7f7;
+			padding: 18px;
+			border-radius: 6px;
+			text-align: left;
+			margin-bottom: 20px;
+		}
+
+		.payment-info p {
+			margin: 10px 0;
+			font-size: 15px;
+		}
+
+		.payment-info span {
+			font-weight: bold;
+		}
+
+		.amount {
+			font-size: 24px;
+			color: #d50000;
+			font-weight: bold;
+		}
+
+		.status {
+			margin: 20px 0;
+			padding: 10px;
+			border-radius: 5px;
+			background: #fff3cd;
+			color: #856404;
+			font-weight: bold;
+		}
+
+		.pay-button {
+			width: 100%;
+			padding: 13px;
+			border: none;
+			border-radius: 5px;
+			background: #d50000;
+			color: white;
+			font-size: 16px;
+			font-weight: bold;
+			cursor: pointer;
+		}
+
+		.pay-button:hover {
+			background: #b80000;
+		}
+
+		.pay-button:disabled {
+			background: #999;
+			cursor: not-allowed;
+		}
+
+		.back-button {
+			width: 100%;
+			margin-top: 10px;
+			padding: 11px;
+			border: none;
+			border-radius: 5px;
+			background: #222;
+			color: white;
+			cursor: pointer;
+		}
+
+		.back-button:hover {
+			background: #444;
+		}
+
+		.message {
+			margin-top: 15px;
+			font-size: 14px;
+			color: #666;
+		}
+	</style>
+
+</head>
+
+
+<body>
+
+
+	<div class="payment-container">
+
+
+		<!-- ================= LOGO ================= -->
+
+		<div class="logo">
+			CartNexa
+		</div>
+
+
+		<h2>
+			Complete Your Payment
+		</h2>
+
+
+		<!-- ================= PAYMENT INFO ================= -->
+
+		<div class="payment-info">
+
+			<p>
+				Order ID:
+				<span id="orderId">
+					Loading...
+				</span>
+			</p>
+
+			<p>
+				Razorpay Order ID:
+				<span id="razorpayOrderId">
+					Loading...
+				</span>
+			</p>
+
+			<p>
+				Amount:
+				<span id="amount" class="amount">
+					Loading...
+				</span>
+			</p>
+
+			<p>
+				Currency:
+				<span id="currency">
+					Loading...
+				</span>
+			</p>
+
+		</div>
+
+
+		<!-- ================= STATUS ================= -->
+
+		<div id="status" class="status">
+			Payment Status: PENDING
+		</div>
+
+
+		<!-- ================= PAY BUTTON ================= -->
+
+		<button id="payButton" class="pay-button" onclick="openCheckout()">
+
+			Pay Now
+
+		</button>
+
+
+		<!-- ================= BACK BUTTON ================= -->
+
+		<button class="back-button" onclick="goBack()">
+
+			Back to Cart
+
+		</button>
+
+
+		<!-- ================= MESSAGE ================= -->
+
+		<div id="message" class="message"></div>
+
+
+	</div>
+
+
+	<script>
+
+
+		// =====================================================
+		// 1. READ DATA FROM URL
+		// =====================================================
+
+		const params =
+			new URLSearchParams(
+				window.location.search
+			);
+
+
+		const orderId =
+			params.get("orderId");
+
+
+		const razorpayOrderId =
+			params.get("razorpayOrderId");
+
+
+		const amount =
+			Number(
+				params.get("amount")
+			);
+
+
+		const currency =
+			params.get("currency");
+
+
+		const razorpayKey =
+			params.get("key");
+
+
+		// =====================================================
+		// 2. GET JWT
+		// =====================================================
+
+		const token =
+			localStorage.getItem("token");
+
+
+		// =====================================================
+		// 3. DEBUG
+		// =====================================================
+
+		console.log(
+			"Internal Order ID:",
+			orderId
+		);
+
+		console.log(
+			"Razorpay Order ID:",
+			razorpayOrderId
+		);
+
+		console.log(
+			"Amount:",
+			amount
+		);
+
+		console.log(
+			"Currency:",
+			currency
+		);
+
+
+		// Do NOT print secret key.
+		// Razorpay Key ID is safe to use on frontend.
+
+
+		// =====================================================
+		// 4. LOGIN CHECK
+		// =====================================================
+
+		if (!token) {
+
+			alert(
+				"Please login first."
+			);
+
+			window.location.href =
+				"../auth/index.html";
+
+		}
+
+
+		// =====================================================
+		// 5. DISPLAY PAYMENT DATA
+		// =====================================================
+
+		document.getElementById(
+			"orderId"
+		).innerText =
+			orderId || "Not Available";
+
+
+		document.getElementById(
+			"razorpayOrderId"
+		).innerText =
+			razorpayOrderId || "Not Available";
+
+
+		document.getElementById(
+			"currency"
+		).innerText =
+			currency || "INR";
+
+
+		document.getElementById(
+			"amount"
+		).innerText =
+			amount
+				? "₹" +
+				amount.toLocaleString("en-IN")
+				: "₹0";
+
+
+		// =====================================================
+		// 6. VALIDATE PAYMENT DATA
+		// =====================================================
+
+		function validatePaymentData() {
+
+			if (!orderId) {
+				return false;
+			}
+
+			if (!razorpayOrderId) {
+				return false;
+			}
+
+			if (!amount || amount <= 0) {
+				return false;
+			}
+
+			if (!currency) {
+				return false;
+			}
+
+			if (!razorpayKey) {
+				return false;
+			}
+
+			return true;
+		}
+
+
+		// =====================================================
+		// 7. INITIAL VALIDATION
+		// =====================================================
+
+		if (!validatePaymentData()) {
+
+			document.getElementById(
+				"status"
+			).innerText =
+				"Payment information missing";
+
+
+			document.getElementById(
+				"payButton"
+			).disabled = true;
+
+
+			document.getElementById(
+				"message"
+			).innerText =
+				"Required payment information is missing.";
+
+
+			console.error(
+				"Required payment information is missing."
+			);
+		}
+
+
+		// =====================================================
+		// 8. OPEN RAZORPAY CHECKOUT
+		// =====================================================
+
+		function openCheckout() {
+
+
+			// -----------------------------------------------
+			// Validate
+			// -----------------------------------------------
+
+			if (!validatePaymentData()) {
+
+				alert(
+					"Payment information is missing."
+				);
+
+				return;
+			}
+
+
+			// -----------------------------------------------
+			// Disable button
+			// -----------------------------------------------
+
+			const payButton =
+				document.getElementById(
+					"payButton"
+				);
+
+
+			payButton.disabled = true;
+
+			payButton.innerText =
+				"Opening Payment...";
+
+
+			document.getElementById(
+				"status"
+			).innerText =
+				"Opening Razorpay Checkout...";
+
+
+			// =================================================
+			// RAZORPAY OPTIONS
+			// =================================================
+
+			const options = {
+
+
+				// ---------------------------------------------
+				// Razorpay Key ID
+				// ---------------------------------------------
+
+				key:
+					razorpayKey,
+
+
+				// ---------------------------------------------
+				// Amount in paise
+				// ---------------------------------------------
+
+				amount:
+					Math.round(
+						amount * 100
+					),
+
+
+				// ---------------------------------------------
+				// Currency
+				// ---------------------------------------------
+
+				currency:
+					currency,
+
+
+				// ---------------------------------------------
+				// Application Name
+				// ---------------------------------------------
+
+				name:
+					"CartNexa",
+
+
+				// ---------------------------------------------
+				// Description
+				// ---------------------------------------------
+
+				description:
+					"E-Commerce Order Payment",
+
+
+				// ---------------------------------------------
+				// Razorpay Order ID
+				// ---------------------------------------------
+
+				order_id:
+					razorpayOrderId,
+
+
+				// =================================================
+				// PAYMENT SUCCESS
+				// =================================================
+
+				handler:
+					function (response) {
+
+
+						console.log(
+							"========== PAYMENT SUCCESS =========="
+						);
+
+
+						console.log(
+							"Razorpay Payment ID:",
+							response.razorpay_payment_id
+						);
+
+
+						console.log(
+							"Razorpay Order ID:",
+							response.razorpay_order_id
+						);
+
+
+						console.log(
+							"Razorpay Signature:",
+							response.razorpay_signature
+						);
+
+
+						// -----------------------------------------
+						// Update UI
+						// -----------------------------------------
+
+						document.getElementById(
+							"status"
+						).innerText =
+							"Payment Completed";
+
+
+						document.getElementById(
+							"message"
+						).innerText =
+							"Payment successful. Payment verification is being processed.";
+
+
+						// -----------------------------------------
+						// Disable button
+						// -----------------------------------------
+
+						document.getElementById(
+							"payButton"
+						).disabled = true;
+
+
+						document.getElementById(
+							"payButton"
+						).innerText =
+							"Payment Completed";
+
+
+						// -----------------------------------------
+						// Show success message
+						// -----------------------------------------
+
+						
+						window.location.href =
+						       `../order/order-success.html?orderId=${orderId}`;
+
+						/*
+						 * IMPORTANT:
+						 *
+						 * Frontend payment success does NOT
+						 * directly mark payment as PAID.
+						 *
+						 * Razorpay webhook will verify the
+						 * payment on Payment Service.
+						 *
+						 * Razorpay
+						 *      ↓
+						 * Webhook
+						 *      ↓
+						 * Payment Service
+						 *      ↓
+						 * payment = PAID
+						 *      ↓
+						 * Order Service
+						 *      ↓
+						 * Order updated
+						 *
+						 */
+					},
+
+
+				// =================================================
+				// CHECKOUT CLOSED
+				// =================================================
+
+				modal: {
+
+					ondismiss:
+						function () {
+
+
+							console.log(
+								"Razorpay Checkout Closed"
+							);
+
+
+							document.getElementById(
+								"status"
+							).innerText =
+								"Payment Status: PENDING";
+
+
+							document.getElementById(
+								"message"
+							).innerText =
+								"Payment window was closed. You can try again.";
+
+
+							document.getElementById(
+								"payButton"
+							).disabled = false;
+
+
+							document.getElementById(
+								"payButton"
+							).innerText =
+								"Pay Now";
+						}
+				},
+
+
+				// =================================================
+				// THEME
+				// =================================================
+
+				theme: {
+
+					color:
+						"#d50000"
+				}
+			};
+
+
+			// =====================================================
+			// CREATE RAZORPAY INSTANCE
+			// =====================================================
+
+			const razorpay =
+				new Razorpay(options);
+
+
+			// =====================================================
+			// PAYMENT FAILED
+			// =====================================================
+
+			razorpay.on(
+				"payment.failed",
+
+				function (response) {
+
+
+					console.error(
+						"========== PAYMENT FAILED =========="
+					);
+
+
+					console.error(
+						response.error
+					);
+
+
+					document.getElementById(
+						"status"
+					).innerText =
+						"Payment Status: FAILED";
+
+
+					document.getElementById(
+						"message"
+					).innerText =
+						"Payment failed. Please try again.";
+
+
+					document.getElementById(
+						"payButton"
+					).disabled = false;
+
+
+					document.getElementById(
+						"payButton"
+					).innerText =
+						"Pay Now";
+
+
+					alert(
+						"Payment failed. Please try again."
+					);
+				}
+			);
+
+
+			// =====================================================
+			// OPEN RAZORPAY CHECKOUT
+			// =====================================================
+
+			razorpay.open();
+		}
+
+
+		// =====================================================
+		// BACK TO CART
+		// =====================================================
+
+		function goBack() {
+
+			/*
+			 * payment.html is inside:
+			 *
+			 * static/payment/
+			 *
+			 * cart.html is inside:
+			 *
+			 * static/product/
+			 *
+			 * Therefore:
+			 *
+			 * ../product/cart.html
+			 */
+
+			window.location.href =
+				"../product/cart.html";
+		}
+
+
+	</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<title>Order Placed Successfully - CartNexa</title>
+
+	<style>
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+		}
+
+		body {
+			font-family: Arial, Helvetica, sans-serif;
+			background: #f5f7fa;
+			color: #212121;
+			min-height: 100vh;
+		}
+
+		/* ================= HEADER ================= */
+
+		.header {
+			height: 65px;
+			background: #2874f0;
+			display: flex;
+			align-items: center;
+			padding: 0 7%;
+			color: white;
+			box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+		}
+
+		.logo {
+			font-size: 25px;
+			font-weight: bold;
+			letter-spacing: 0.5px;
+		}
+
+		.logo span {
+			display: block;
+			font-size: 13px;
+			font-weight: normal;
+			margin-top: -2px;
+		}
+
+		/* ================= MAIN ================= */
+
+		.container {
+			max-width: 900px;
+			margin: 45px auto;
+			padding: 0 20px;
+		}
+
+		.success-card {
+			background: white;
+			border-radius: 8px;
+			padding: 50px 40px;
+			text-align: center;
+			box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+		}
+
+		/* ================= SUCCESS ICON ================= */
+
+		.success-icon {
+			width: 80px;
+			height: 80px;
+			margin: 0 auto 25px;
+			border-radius: 50%;
+			background: #2e7d32;
+			color: white;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 45px;
+			font-weight: bold;
+		}
+
+		.success-title {
+			font-size: 30px;
+			font-weight: 600;
+			color: #212121;
+			margin-bottom: 12px;
+		}
+
+		.success-message {
+			color: #666;
+			font-size: 16px;
+			line-height: 1.6;
+			margin-bottom: 25px;
+		}
+
+		/* ================= COD BADGE ================= */
+
+		.cod-badge {
+			display: inline-block;
+			margin-bottom: 30px;
+			padding: 9px 20px;
+			border-radius: 20px;
+			background: #fff3e0;
+			color: #e65100;
+			font-size: 14px;
+			font-weight: 600;
+		}
+
+		/* ================= ORDER INFO ================= */
+
+		.order-info {
+			max-width: 520px;
+			margin: 0 auto 30px;
+			border: 1px solid #e0e0e0;
+			border-radius: 6px;
+			overflow: hidden;
+			background: #fff;
+		}
+
+		.info-row {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: 17px 20px;
+			border-bottom: 1px solid #eeeeee;
+			font-size: 15px;
+			gap: 20px;
+		}
+
+		.info-row:last-child {
+			border-bottom: none;
+		}
+
+		.info-label {
+			color: #757575;
+			text-align: left;
+		}
+
+		.info-value {
+			font-weight: 600;
+			color: #212121;
+			text-align: right;
+		}
+
+		.order-id {
+			color: #2874f0;
+		}
+
+		.delivery-date {
+			color: #2e7d32;
+		}
+
+		/* ================= BUTTONS ================= */
+
+		.buttons {
+			display: flex;
+			justify-content: center;
+			gap: 15px;
+			flex-wrap: wrap;
+		}
+
+		.btn {
+			min-width: 180px;
+			padding: 13px 25px;
+			border-radius: 4px;
+			border: none;
+			cursor: pointer;
+			font-size: 15px;
+			font-weight: 600;
+			text-decoration: none;
+			display: inline-block;
+			transition: 0.2s ease;
+		}
+
+		.btn-primary {
+			background: #2874f0;
+			color: white;
+		}
+
+		.btn-primary:hover {
+			background: #1769df;
+		}
+
+		.btn-secondary {
+			background: white;
+			color: #2874f0;
+			border: 1px solid #2874f0;
+		}
+
+		.btn-secondary:hover {
+			background: #f0f6ff;
+		}
+
+		/* ================= BOTTOM MESSAGE ================= */
+
+		.bottom-message {
+			margin-top: 30px;
+			color: #777;
+			font-size: 14px;
+			line-height: 1.6;
+		}
+
+		/* ================= ERROR MESSAGE ================= */
+
+		.error-message {
+			display: none;
+			max-width: 520px;
+			margin: 0 auto 25px;
+			padding: 12px 15px;
+			background: #ffebee;
+			color: #c62828;
+			border-radius: 5px;
+			font-size: 14px;
+		}
+
+		/* ================= MOBILE ================= */
+
+		@media (max-width: 600px) {
+
+			.header {
+				padding: 0 20px;
+			}
+
+			.logo {
+				font-size: 22px;
+			}
+
+			.container {
+				margin: 25px auto;
+				padding: 0 12px;
+			}
+
+			.success-card {
+				padding: 35px 20px;
+			}
+
+			.success-icon {
+				width: 70px;
+				height: 70px;
+				font-size: 38px;
+				margin-bottom: 20px;
+			}
+
+			.success-title {
+				font-size: 25px;
+			}
+
+			.success-message {
+				font-size: 14px;
+			}
+
+			.order-info {
+				width: 100%;
+			}
+
+			.info-row {
+				padding: 15px;
+				font-size: 14px;
+			}
+
+			.buttons {
+				flex-direction: column;
+			}
+
+			.btn {
+				width: 100%;
+			}
+		}
+	</style>
+</head>
+
+<body>
+
+	<!-- ================= HEADER ================= -->
+
+	<header class="header">
+
+		<div class="logo">
+			CartNexa
+			<span>Smart Shopping</span>
+		</div>
+
+	</header>
+
+
+	<!-- ================= MAIN ================= -->
+
+	<main class="container">
+
+		<div class="success-card">
+
+			<!-- SUCCESS ICON -->
+
+			<div class="success-icon">
+				✓
+			</div>
+
+
+			<!-- TITLE -->
+
+			<h1 class="success-title">
+				Order Placed Successfully!
+			</h1>
+
+
+			<p class="success-message">
+				Thank you for shopping with CartNexa.<br>
+				Your order has been placed successfully and will be processed shortly.
+			</p>
+
+
+			<!-- PAYMENT METHOD -->
+
+			<div class="cod-badge">
+				💵 Cash on Delivery
+			</div>
+
+
+			<!-- ERROR -->
+
+			<div id="errorMessage" class="error-message">
+				Order information could not be loaded.
+			</div>
+
+
+			<!-- ORDER INFORMATION -->
+
+			<div class="order-info">
+
+				<!-- ORDER ID -->
+
+				<div class="info-row">
+
+					<span class="info-label">
+						Order ID
+					</span>
+
+					<span class="info-value order-id" id="orderId">
+						Loading...
+					</span>
+
+				</div>
+
+
+				<!-- DELIVERY DATE -->
+
+				<div class="info-row">
+
+					<span class="info-label">
+						Expected Delivery
+					</span>
+
+					<span class="info-value delivery-date" id="deliveryDate">
+						Loading...
+					</span>
+
+				</div>
+
+
+				<!-- PAYMENT -->
+
+				<div class="info-row">
+
+					<span class="info-label">
+						Payment
+					</span>
+
+					<span class="info-value">
+						Cash on Delivery
+					</span>
+
+				</div>
+
+
+				<!-- ORDER STATUS -->
+
+				<div class="info-row">
+
+					<span class="info-label">
+						Order Status
+					</span>
+
+					<span class="info-value delivery-date">
+						Confirmed
+					</span>
+
+				</div>
+
+			</div>
+
+
+			<!-- BUTTONS -->
+
+			<div class="buttons">
+
+				<!-- IMPORTANT:
+                     JavaScript will add ?orderId=XX here -->
+
+				<a href="#" id="viewOrderBtn" class="btn btn-primary">
+					View My Orders
+				</a>
+
+
+				<a href="../product/products.html" class="btn btn-secondary">
+
+					Continue Shopping
+
+				</a>
+
+			</div>
+
+
+			<!-- BOTTOM MESSAGE -->
+
+			<p class="bottom-message">
+
+				You can view your order details anytime from the
+				<strong>My Orders</strong> section.
+
+			</p>
+
+		</div>
+
+	</main>
+
+
+	<!-- ================= JAVASCRIPT ================= -->
+
+	<script>
+
+		document.addEventListener("DOMContentLoaded", function () {
+
+			/*
+			 * First priority:
+			 * URL orderId
+			 *
+			 * Example:
+			 * order-COD-confirmation.html?orderId=27
+			 */
+
+			const urlParams =
+				new URLSearchParams(window.location.search);
+
+			const urlOrderId =
+				urlParams.get("orderId");
+
+
+			/*
+			 * Fallback localStorage keys
+			 */
+
+			let orderId =
+				urlOrderId ||
+
+				localStorage.getItem("lastOrderId") ||
+
+				localStorage.getItem("orderId") ||
+
+				localStorage.getItem("createdOrderId");
+
+
+			/* ================= ORDER ID ================= */
+
+			const orderIdElement =
+				document.getElementById("orderId");
+
+
+			if (orderId) {
+
+				orderIdElement.textContent =
+					"OD" + orderId;
+
+
+				/*
+				 * Save latest order ID.
+				 * This helps if user refreshes the page.
+				 */
+
+				localStorage.setItem(
+					"lastOrderId",
+					orderId
+				);
+
+
+			} else {
+
+				orderIdElement.textContent =
+					"Not Available";
+
+
+				showError(
+					"Order was placed, but the Order ID could not be loaded."
+				);
+
+			}
+
+
+			/* ================= VIEW ORDER BUTTON ================= */
+
+			const viewOrderBtn =
+				document.getElementById("viewOrderBtn");
+
+
+			if (orderId) {
+
+				viewOrderBtn.href =
+					"order-details.html?orderId=" +
+					encodeURIComponent(orderId);
+
+			} else {
+
+				viewOrderBtn.href = "#";
+
+				viewOrderBtn.addEventListener(
+					"click",
+					function (event) {
+
+						event.preventDefault();
+
+						alert("Order ID not available.");
+
+					}
+				);
+
+			}
+
+
+			/* ================= DELIVERY DATE ================= */
+
+			const deliveryDateElement =
+				document.getElementById("deliveryDate");
+
+
+			/*
+			 * Expected delivery = current date + 5 days
+			 */
+
+			const today = new Date();
+
+			today.setDate(
+				today.getDate() + 5
+			);
+
+
+			const options = {
+				day: "2-digit",
+				month: "short",
+				year: "numeric"
+			};
+
+
+			deliveryDateElement.textContent =
+				today.toLocaleDateString(
+					"en-IN",
+					options
+				);
+
+		});
+
+
+		/* ================= ERROR ================= */
+
+		function showError(message) {
+
+			const errorElement =
+				document.getElementById("errorMessage");
+
+			errorElement.textContent =
+				message;
+
+			errorElement.style.display =
+				"block";
+
+		}
+
+	</script>
+
+</body>
+
+</html>

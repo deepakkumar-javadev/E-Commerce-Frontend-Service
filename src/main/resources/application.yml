@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: ECOM-FRONTEND-SERVICE
+
+server:
+  port: 9090
